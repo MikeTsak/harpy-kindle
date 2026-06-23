@@ -15,13 +15,16 @@ export default function Boons() {
   const [level, setLevel] = useState('minor');
   const [desc, setDesc] = useState('');
   const [posting, setPosting] = useState(false);
+  const [settling, setSettling] = useState(null);
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
 
   const fetchBoons = () => {
     api.get('/boons').then(res => {
-      setBoons(res.data.boons || []);
+      const activeBoons = (res.data.boons || []).filter(b => b.status === 'owed');
+      setBoons(activeBoons);
+      localStorage.setItem('harpy_boons_cache', JSON.stringify(activeBoons));
       setLoading(false);
     }).catch(err => {
       setError('FAILED TO FETCH BOON REGISTRY.');
@@ -31,11 +34,24 @@ export default function Boons() {
 
   const fetchRoster = () => {
     api.get('/camarilla/roster').then(res => {
-      setRoster(res.data.roster || []);
+      const rosterData = res.data.roster || [];
+      setRoster(rosterData);
+      localStorage.setItem('harpy_roster_cache', JSON.stringify(rosterData));
     }).catch(err => console.error('Failed to load roster:', err));
   };
 
   useEffect(() => {
+    // Attempt cache load first
+    const boonsCache = localStorage.getItem('harpy_boons_cache');
+    if (boonsCache) {
+      setBoons(JSON.parse(boonsCache));
+      setLoading(false);
+    }
+    const rosterCache = localStorage.getItem('harpy_roster_cache');
+    if (rosterCache) {
+      setRoster(JSON.parse(rosterCache));
+    }
+
     fetchBoons();
     fetchRoster();
   }, []);
@@ -74,6 +90,19 @@ export default function Boons() {
       setError(err.response?.data?.error || 'FAILED TO RECORD BOON.');
     } finally {
       setPosting(false);
+    }
+  };
+
+  const handleSettleBoon = async (id, newStatus) => {
+    if (!window.confirm(`Are you sure you want to mark this boon as ${newStatus}?`)) return;
+    setSettling(id);
+    try {
+      await api.patch(`/boons/${id}`, { status: newStatus });
+      fetchBoons();
+    } catch (err) {
+      setError('FAILED TO UPDATE BOON STATUS.');
+    } finally {
+      setSettling(null);
     }
   };
 
@@ -173,20 +202,37 @@ export default function Boons() {
         style={{ marginBottom: '15px' }}
       />
 
-      {loading ? (
+      {loading && boons.length === 0 ? (
         <p>ACCESSING DATABASE...</p>
       ) : filteredBoons.length === 0 ? (
         <p>NO RECORDS FOUND.</p>
       ) : (
         <div className="grid-menu" style={{ marginTop: '15px' }}>
           {filteredBoons.map(b => (
-            <div key={b.id} className="card">
+            <div key={b.id} className="card" style={{ paddingBottom: '10px' }}>
               <strong style={{ textDecoration: 'underline' }}>{String(b.level).toUpperCase()} BOON</strong>
               <span style={{ float: 'right' }}>[{String(b.status).toUpperCase()}]</span>
               <br/><br/>
               &gt; DEBTOR: {b.from_name}<br/>
               &gt; CREDITOR: {b.to_name}<br/>
               {b.description && <>&gt; NOTES: {b.description}<br/></>}
+              
+              <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
+                <button 
+                  onClick={() => handleSettleBoon(b.id, 'paid')}
+                  disabled={settling === b.id}
+                  style={{ flex: 1, padding: '10px', fontSize: '16px' }}
+                >
+                  SETTLE DEBT
+                </button>
+                <button 
+                  onClick={() => handleSettleBoon(b.id, 'excused')}
+                  disabled={settling === b.id}
+                  style={{ flex: 1, padding: '10px', fontSize: '16px', background: '#eee', color: '#000' }}
+                >
+                  EXCUSE DEBT
+                </button>
+              </div>
             </div>
           ))}
         </div>

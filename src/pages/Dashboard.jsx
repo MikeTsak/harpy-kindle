@@ -28,6 +28,20 @@ export default function Dashboard() {
             <span>&rarr;</span>
           </button>
         </Link>
+
+        <Link to="/domains" style={{ textDecoration: 'none' }}>
+          <button>
+            <span>TERRITORY DIRECTORY</span>
+            <span>&rarr;</span>
+          </button>
+        </Link>
+
+        <Link to="/secrets" style={{ textDecoration: 'none' }}>
+          <button style={{ borderStyle: 'dashed' }}>
+            <span>PRIVATE LEDGER (OFFLINE)</span>
+            <span>&rarr;</span>
+          </button>
+        </Link>
       </div>
     </div>
   );

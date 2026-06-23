@@ -3,11 +3,13 @@ import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import AuthProvider, { AuthCtx } from './AuthContext';
 import Login from './features/auth/Login';
 
-// Placeholder Pages
+// Pages
 import Dashboard from './pages/Dashboard';
 import Boons from './pages/Boons';
 import Reputation from './pages/Reputation';
 import ElysiumFeed from './pages/ElysiumFeed';
+import Domains from './pages/Domains';
+import Secrets from './pages/Secrets';
 
 function PrivateHarpyRoute({ children }) {
   const { user, loading } = useContext(AuthCtx);
@@ -22,7 +24,7 @@ function PrivateHarpyRoute({ children }) {
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <header style={{ borderBottom: '2px solid var(--border-color)', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link to="/" style={{ textDecoration: 'none', color: 'var(--text-color)', fontWeight: 'bold', fontSize: '24px' }}>
-          SCHRECKNET [HARPY]
+          EREBUS [HARPY NODE]
         </Link>
         <span style={{ fontWeight: 'bold' }}>{user.display_name?.toUpperCase()}</span>
       </header>
@@ -46,6 +48,8 @@ export default function App() {
           <Route path="/boons" element={<PrivateHarpyRoute><Boons /></PrivateHarpyRoute>} />
           <Route path="/reputation" element={<PrivateHarpyRoute><Reputation /></PrivateHarpyRoute>} />
           <Route path="/elysium" element={<PrivateHarpyRoute><ElysiumFeed /></PrivateHarpyRoute>} />
+          <Route path="/domains" element={<PrivateHarpyRoute><Domains /></PrivateHarpyRoute>} />
+          <Route path="/secrets" element={<PrivateHarpyRoute><Secrets /></PrivateHarpyRoute>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
