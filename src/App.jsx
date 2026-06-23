@@ -23,7 +23,8 @@ function PrivateHarpyRoute({ children }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <header style={{ borderBottom: '2px solid var(--border-color)', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link to="/" style={{ textDecoration: 'none', color: 'var(--text-color)', fontWeight: 'bold', fontSize: '24px' }}>
+        <Link to="/" style={{ textDecoration: 'none', color: 'var(--text-color)', fontWeight: 'bold', fontSize: '24px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <img src="/img/pixel-logo.png" alt="Erebus Logo" style={{ height: '50px', imageRendering: 'pixelated' }} />
           EREBUS [HARPY NODE]
         </Link>
         <span style={{ fontWeight: 'bold' }}>{user.display_name?.toUpperCase()}</span>
