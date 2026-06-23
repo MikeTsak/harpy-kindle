@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
 import AuthProvider, { AuthCtx } from './AuthContext';
 import Login from './features/auth/Login';
@@ -12,14 +12,12 @@ import Domains from './pages/Domains';
 import Secrets from './pages/Secrets';
 
 function PrivateHarpyRoute({ children }) {
-  const { user, loading } = useContext(AuthCtx);
+  const { user, loading, logout } = useContext(AuthCtx);
+  const [menuOpen, setMenuOpen] = useState(false);
   
   if (loading) return <div className="container"><h2>LOADING...</h2></div>;
   if (!user) return <Navigate to="/login" replace />;
   
-  // Optional: check if user is admin or harpy
-  // if (user.role !== 'admin' && user.role !== 'harpy') return <div className="container">ACCESS DENIED</div>;
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <header style={{ borderBottom: '2px solid var(--border-color)', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -27,7 +25,24 @@ function PrivateHarpyRoute({ children }) {
           <img src="/img/pixel-logo.png" alt="Erebus Logo" style={{ height: '50px', imageRendering: 'pixelated' }} />
           EREBUS [HARPY NODE]
         </Link>
-        <span style={{ fontWeight: 'bold' }}>{user.display_name?.toUpperCase()}</span>
+        <div style={{ position: 'relative' }}>
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{ fontWeight: 'bold', background: 'none', border: 'none', color: 'var(--text-color)', fontSize: '20px', cursor: 'pointer', textDecoration: 'underline', padding: '10px' }}
+          >
+            {user.display_name?.toUpperCase()} ▼
+          </button>
+          {menuOpen && (
+            <div className="card" style={{ position: 'absolute', right: 0, top: '100%', padding: '10px', zIndex: 100, minWidth: '150px', marginTop: '10px' }}>
+              <button 
+                onClick={() => { setMenuOpen(false); logout(); }}
+                style={{ width: '100%', padding: '15px' }}
+              >
+                LOG OUT
+              </button>
+            </div>
+          )}
+        </div>
       </header>
       <main style={{ flexGrow: 1, paddingBottom: '40px' }}>
         {children}
