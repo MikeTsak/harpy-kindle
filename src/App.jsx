@@ -20,15 +20,18 @@ function PrivateHarpyRoute({ children }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <header style={{ borderBottom: '4px solid #000', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link to="/" style={{ textDecoration: 'none', color: '#000', fontWeight: 'bold', fontSize: '24px' }}>
-          HARPY.NET
+      <header style={{ borderBottom: '2px solid var(--border-color)', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Link to="/" style={{ textDecoration: 'none', color: 'var(--text-color)', fontWeight: 'bold', fontSize: '24px' }}>
+          SCHRECKNET [HARPY]
         </Link>
         <span style={{ fontWeight: 'bold' }}>{user.display_name?.toUpperCase()}</span>
       </header>
-      <main style={{ flexGrow: 1 }}>
+      <main style={{ flexGrow: 1, paddingBottom: '40px' }}>
         {children}
       </main>
+      <footer style={{ borderTop: '2px solid var(--border-color)', padding: '15px', textAlign: 'center', fontWeight: 'bold' }}>
+        --- [ NODE OPERATOR: GIANNAKIS ] ---
+      </footer>
     </div>
   );
 }

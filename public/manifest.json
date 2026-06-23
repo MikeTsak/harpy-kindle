@@ -1,0 +1,17 @@
+{
+  "id": "/erebus-portal",
+  "name": "Erebus Portal",
+  "short_name": "Erebus",
+  "description": "Erebus Portal for the Athens Through-Time LARP. Create characters, manage downtimes, and navigate the court.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111111",
+  "theme_color": "#8a0f1a",
+  "icons": [
+    { "src": "img/ATT-logo(1).png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/ATT-logo(1).png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

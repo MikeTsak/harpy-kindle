@@ -1,4 +1,4 @@
-/* Kindle 11th Gen E-Ink optimizations */
+/* Kindle 11th Gen E-Ink optimizations - Clean White Theme */
 :root {
   --bg-color: #ffffff;
   --text-color: #000000;
@@ -21,6 +21,33 @@ body {
   font-size: 20px; /* Large readable text */
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Kindle Touch Optimizations */
+input[type="text"],
+input[type="password"],
+select,
+button {
+  width: 100%;
+  padding: 15px;
+  font-size: 20px;
+  margin-bottom: 15px;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border-radius: 4px;
+}
+
+button {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #777;
+  border-color: #777;
 }
 
 /* Large tap targets for touch */
