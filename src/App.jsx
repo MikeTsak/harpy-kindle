@@ -30,7 +30,7 @@ function PrivateHarpyRoute({ children }) {
             onClick={() => setMenuOpen(!menuOpen)}
             style={{ fontWeight: 'bold', background: 'none', border: 'none', color: 'var(--text-color)', fontSize: '20px', cursor: 'pointer', textDecoration: 'underline', padding: '10px' }}
           >
-            {(user.display_name || '').split(' ')[0].toUpperCase()} ▼
+            {(user.character?.name || user.display_name || '').split(' ')[0].toUpperCase()} ▼
           </button>
           {menuOpen && (
             <div className="card" style={{ position: 'absolute', right: 0, top: '100%', padding: '10px', zIndex: 100, minWidth: '150px', marginTop: '10px' }}>

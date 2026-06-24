@@ -10,7 +10,12 @@ export default function AuthProvider({ children }) {
   async function loadMe() {
     try {
       const { data } = await api.get('/auth/me');
-      setUser(data.user);
+      let character = null;
+      try {
+        const charRes = await api.get('/characters/me');
+        character = charRes.data.character;
+      } catch (err) {}
+      setUser({ ...data.user, character });
     } catch { 
       setUser(null); 
     } finally {

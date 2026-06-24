@@ -87,14 +87,14 @@ export default function Domains() {
   const mapStyle = useCallback((feature) => {
     const n = feature?.properties?.__division;
     const claim = claimByDiv.get(n);
-    // Use high contrast solid borders for E-ink, and shading based on claim ownership
+    // B&W e-ink friendly styling
     return {
       color: '#000000',
-      weight: 2,
+      weight: claim ? 3 : 1,
       opacity: 1,
-      fillColor: claim ? (claim.color || '#555555') : '#ffffff',
-      fillOpacity: claim ? 0.8 : 0.1,
-      dashArray: claim ? '' : '4',
+      fillColor: '#000000',
+      fillOpacity: claim ? 0.2 : 0.05,
+      dashArray: claim ? '' : '4 4',
     };
   }, [claimByDiv]);
 
@@ -107,10 +107,37 @@ export default function Domains() {
       `<strong>Division ${n}: ${name}</strong><br/>` +
       `Owner: ${claim ? claim.owner_name : 'UNCLAIMED'}`
     );
+
+    if (claim) {
+      layer.bindTooltip(claim.owner_name, { permanent: true, direction: 'center', className: 'domain-tooltip-claimed' });
+    } else {
+      layer.bindTooltip(String(n), { permanent: true, direction: 'center', className: 'domain-tooltip-unclaimed' });
+    }
   }, [claimByDiv]);
 
   return (
     <div className="container" style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 'calc(100vh - 160px)' }}>
+      <style>{`
+        .domain-tooltip-claimed {
+          background-color: #ffffff !important;
+          border: 2px solid #000000 !important;
+          color: #000000 !important;
+          font-weight: bold !important;
+          font-size: 14px !important;
+          text-transform: uppercase;
+          border-radius: 4px;
+          text-shadow: none;
+        }
+        .domain-tooltip-unclaimed {
+          background: transparent !important;
+          border: none !important;
+          color: #555555 !important;
+          font-weight: bold !important;
+          font-size: 12px !important;
+          box-shadow: none !important;
+          text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+        }
+      `}</style>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>[ TERRITORY DIRECTORY ]</h2>
         <button 
@@ -129,12 +156,12 @@ export default function Domains() {
             <MapContainer
               center={[37.9838, 23.7275]} // Athens
               zoom={11}
-              style={{ height: '100%', width: '100%' }}
+              style={{ height: '500px', width: '100%' }}
               scrollWheelZoom={true}
             >
               <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; OpenStreetMap'
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                attribution='&copy; CARTO'
               />
               <GeoJSON
                 data={geoJsonData}
@@ -167,14 +194,9 @@ export default function Domains() {
                       #{div.number} - {div.name}
                     </strong>
                     {div.claim && (
-                      <span style={{ 
-                        display: 'inline-block', 
-                        width: '20px', 
-                        height: '20px', 
-                        backgroundColor: div.claim.color || '#000',
-                        border: '2px solid var(--border-color)',
-                        borderRadius: '50%'
-                      }}></span>
+                      <span style={{ fontWeight: 'bold', border: '2px solid black', padding: '2px 8px', fontSize: '14px' }}>
+                        CLAIMED
+                      </span>
                     )}
                   </div>
                   
