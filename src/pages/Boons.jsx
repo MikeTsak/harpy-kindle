@@ -6,6 +6,7 @@ export default function Boons() {
   const [roster, setRoster] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPaid, setShowPaid] = useState(false);
 
   // Form state
   const [fromSelect, setFromSelect] = useState('');
@@ -22,9 +23,9 @@ export default function Boons() {
 
   const fetchBoons = () => {
     api.get('/boons').then(res => {
-      const activeBoons = (res.data.boons || []).filter(b => b.status === 'owed');
-      setBoons(activeBoons);
-      localStorage.setItem('harpy_boons_cache', JSON.stringify(activeBoons));
+      const fetchedBoons = res.data.boons || [];
+      setBoons(fetchedBoons);
+      localStorage.setItem('harpy_boons_cache', JSON.stringify(fetchedBoons));
       setLoading(false);
     }).catch(err => {
       setError('FAILED TO FETCH BOON REGISTRY.');
@@ -107,15 +108,23 @@ export default function Boons() {
   };
 
   const filteredBoons = useMemo(() => {
-    if (!searchQuery.trim()) return boons;
-    const q = searchQuery.toLowerCase();
-    return boons.filter(b => 
-      (b.from_name || '').toLowerCase().includes(q) ||
-      (b.to_name || '').toLowerCase().includes(q) ||
-      (b.description || '').toLowerCase().includes(q) ||
-      (b.level || '').toLowerCase().includes(q)
-    );
-  }, [boons, searchQuery]);
+    let q = searchQuery.trim().toLowerCase();
+    
+    let filtered = showPaid 
+      ? boons.filter(b => (b.status || '').toLowerCase() === 'paid')
+      : boons.filter(b => (b.status || '').toLowerCase() === 'owed');
+
+    if (q) {
+      filtered = filtered.filter(b => 
+        (b.from_name || '').toLowerCase().includes(q) ||
+        (b.to_name || '').toLowerCase().includes(q) ||
+        (b.description || '').toLowerCase().includes(q) ||
+        (b.level || '').toLowerCase().includes(q)
+      );
+    }
+    
+    return filtered;
+  }, [boons, searchQuery, showPaid]);
 
   return (
     <div className="container">
@@ -191,23 +200,34 @@ export default function Boons() {
         </form>
       </div>
 
-      <h3>[ ACTIVE RECORDS ]</h3>
-      
-      {/* Search Bar */}
-      <input 
-        type="text" 
-        placeholder="Search boons by name, level, or description..." 
-        value={searchQuery}
-        onChange={e => setSearchQuery(e.target.value)}
-        style={{ marginBottom: '15px' }}
-      />
+      <h3>[ {showPaid ? 'PAID RECORDS' : 'ACTIVE RECORDS'} ]</h3>
+
+      {/* Search Bar & Toggle */}
+      <div style={{ marginBottom: '15px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <input 
+          type="text" 
+          placeholder="Search boons by name, level, or description..." 
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          style={{ flex: 1, marginBottom: 0 }}
+        />
+        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+          <input 
+            type="checkbox" 
+            checked={showPaid} 
+            onChange={e => setShowPaid(e.target.checked)} 
+            style={{ width: 'auto', marginBottom: 0 }}
+          />
+          Show Paid
+        </label>
+      </div>
 
       {loading && boons.length === 0 ? (
         <p>ACCESSING DATABASE...</p>
       ) : filteredBoons.length === 0 ? (
-        <p>NO RECORDS FOUND.</p>
+        <p>NO {showPaid ? 'PAID' : 'ACTIVE'} BOONS FOUND.</p>
       ) : (
-        <div className="grid-menu" style={{ marginTop: '15px' }}>
+        <div className="grid-menu" style={{ marginTop: '15px', marginBottom: '30px' }}>
           {filteredBoons.map(b => (
             <div key={b.id} className="card" style={{ paddingBottom: '10px' }}>
               <strong style={{ textDecoration: 'underline' }}>{String(b.level).toUpperCase()} BOON</strong>
@@ -218,20 +238,28 @@ export default function Boons() {
               {b.description && <>&gt; NOTES: {b.description}<br/></>}
               
               <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
-                <button 
-                  onClick={() => handleSettleBoon(b.id, 'paid')}
-                  disabled={settling === b.id}
-                  style={{ flex: 1, padding: '10px', fontSize: '16px' }}
-                >
-                  SETTLE DEBT
-                </button>
-                <button 
-                  onClick={() => handleSettleBoon(b.id, 'excused')}
-                  disabled={settling === b.id}
-                  style={{ flex: 1, padding: '10px', fontSize: '16px', background: '#eee', color: '#000' }}
-                >
-                  EXCUSE DEBT
-                </button>
+                {(b.status || '').toLowerCase() === 'owed' ? (
+                  <>
+                    <button 
+                      onClick={() => handleSettleBoon(b.id, 'paid')}
+                      disabled={settling === b.id}
+                      style={{ flex: 1, padding: '10px', fontSize: '16px' }}
+                    >
+                      SETTLE DEBT
+                    </button>
+                    <button 
+                      onClick={() => handleSettleBoon(b.id, 'excused')}
+                      disabled={settling === b.id}
+                      style={{ flex: 1, padding: '10px', fontSize: '16px', background: '#eee', color: '#000' }}
+                    >
+                      EXCUSE DEBT
+                    </button>
+                  </>
+                ) : (
+                  <div style={{ flex: 1, textAlign: 'center', padding: '10px', background: '#eee', color: '#555', border: '1px solid #ccc' }}>
+                    ALREADY {String(b.status).toUpperCase()}
+                  </div>
+                )}
               </div>
             </div>
           ))}

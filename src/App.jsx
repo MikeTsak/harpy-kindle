@@ -20,7 +20,7 @@ function PrivateHarpyRoute({ children }) {
   
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <header style={{ borderBottom: '2px solid var(--border-color)', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <header style={{ position: 'sticky', top: 0, zIndex: 1000, backgroundColor: 'var(--bg-color)', borderBottom: '2px solid var(--border-color)', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link to="/" style={{ textDecoration: 'none', color: 'var(--text-color)', fontWeight: 'bold', fontSize: '24px', display: 'flex', alignItems: 'center', gap: '15px' }}>
           <img src="/img/bw-kindle-logo.png" alt="Erebus Logo" style={{ height: '70px', imageRendering: 'pixelated' }} />
           EREBUS [HARPY NODE]

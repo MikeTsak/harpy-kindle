@@ -36,6 +36,12 @@
         window.globalThis = window;
       }
       window.addEventListener('error', function(e) {
+        var msg = e.message || e;
+        if (typeof msg === 'string') {
+          if (msg.includes('Unexpected token .')) return;
+          if (msg.includes('import.meta.resolve not supported')) return;
+          if (msg.includes('This script should only be loaded in a browser extension')) return;
+        }
         var errDiv = document.getElementById('debug-error');
         if (!errDiv) {
           errDiv = document.createElement('div');
@@ -46,6 +52,8 @@
         errDiv.innerHTML += '<br><b>[ERROR]</b> ' + (e.message || e) + ' (' + e.filename + ':' + e.lineno + ')';
       });
       window.addEventListener('unhandledrejection', function(e) {
+        var msg = e.reason && e.reason.message ? e.reason.message : String(e.reason);
+        if (msg.includes('import.meta.resolve not supported')) return;
         var errDiv = document.getElementById('debug-error');
         if (!errDiv) {
           errDiv = document.createElement('div');
@@ -53,7 +61,7 @@
           errDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#fff;color:#000;z-index:9999;padding:10px;border-bottom:2px solid black;font-family:monospace;font-size:14px;word-break:break-all;';
           document.body.prepend(errDiv);
         }
-        errDiv.innerHTML += '<br><b>[PROMISE]</b> ' + (e.reason && e.reason.message ? e.reason.message : e.reason);
+        errDiv.innerHTML += '<br><b>[PROMISE]</b> ' + msg;
       });
     </script>
   </head>
