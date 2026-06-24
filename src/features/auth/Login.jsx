@@ -1,8 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { AuthCtx } from '../../AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const { login } = useContext(AuthCtx);
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -14,8 +16,9 @@ export default function Login() {
     setLoading(true);
     try {
       await login(email, password);
+      navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please check credentials.');
+      setError(err.response?.data?.message || err.response?.data?.error || err.message || 'Login failed. Please check credentials.');
     } finally {
       setLoading(false);
     }
