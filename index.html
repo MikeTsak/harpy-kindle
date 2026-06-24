@@ -31,6 +31,31 @@
     <meta name="twitter:description" content="Harpy dashboard for the Athens Through-Time LARP." />
     <meta name="twitter:image" content="/img/ATT-logo(1).png" />
 
+    <script>
+      if (typeof globalThis === 'undefined') {
+        window.globalThis = window;
+      }
+      window.addEventListener('error', function(e) {
+        var errDiv = document.getElementById('debug-error');
+        if (!errDiv) {
+          errDiv = document.createElement('div');
+          errDiv.id = 'debug-error';
+          errDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#fff;color:#000;z-index:9999;padding:10px;border-bottom:2px solid black;font-family:monospace;font-size:14px;word-break:break-all;';
+          document.body.prepend(errDiv);
+        }
+        errDiv.innerHTML += '<br><b>[ERROR]</b> ' + (e.message || e) + ' (' + e.filename + ':' + e.lineno + ')';
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        var errDiv = document.getElementById('debug-error');
+        if (!errDiv) {
+          errDiv = document.createElement('div');
+          errDiv.id = 'debug-error';
+          errDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#fff;color:#000;z-index:9999;padding:10px;border-bottom:2px solid black;font-family:monospace;font-size:14px;word-break:break-all;';
+          document.body.prepend(errDiv);
+        }
+        errDiv.innerHTML += '<br><b>[PROMISE]</b> ' + (e.reason && e.reason.message ? e.reason.message : e.reason);
+      });
+    </script>
   </head>
   <body>
     <noscript style="color:#000; background:#fff; padding:12px; display:block; text-align:center;">
