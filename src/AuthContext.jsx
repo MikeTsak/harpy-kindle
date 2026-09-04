@@ -23,23 +23,25 @@ export default function AuthProvider({ children }) {
     }
   }
 
-  useEffect(() => { 
-    if (localStorage.getItem('token')) {
-      loadMe();
-    } else {
-      setLoading(false);
-    }
+  useEffect(() => {
+    // The session cookie is httpOnly — there's nothing for JS to check
+    // before asking the server whether we're logged in, so always ask.
+    loadMe();
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('token', data.token); 
+    await api.post('/auth/login', { email, password }); // server sets the httpOnly cookie
     await loadMe();
   };
 
-  const logout = () => { 
-    localStorage.removeItem('token'); 
-    setUser(null); 
+  const logout = async () => {
+    try {
+      // Clears the httpOnly cookie server-side — JS can't clear it itself.
+      await api.post('/auth/logout');
+    } catch (e) {
+      // Even if the request fails, drop the client-side session state below.
+    }
+    setUser(null);
   };
 
   return (

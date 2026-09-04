@@ -3,11 +3,13 @@ import { publish } from './utils/notification';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  // The session lives in an httpOnly cookie set by the API (back/utils/authCookie.js)
+  // — this makes the browser attach it automatically. There's no token in JS
+  // to read or set.
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
-  const t = localStorage.getItem('token');
-  if (t) config.headers.Authorization = `Bearer ${t}`;
   config.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
   config.headers['Pragma'] = 'no-cache';
   config.headers['Expires'] = '0';
