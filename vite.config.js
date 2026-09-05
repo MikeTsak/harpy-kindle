@@ -14,7 +14,12 @@ export default defineConfig({
     })
   ],
   build: {
-    target: 'es2019',
+    minify: 'terser',
+    terserOptions: {
+      ecma: 5,
+      compress: { ecma: 5, arrows: false },
+      format: { ecma: 5 },
+    },
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
