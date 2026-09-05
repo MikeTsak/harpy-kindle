@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     legacy({
-      targets: ['defaults', 'not IE 11', 'chrome >= 45', 'safari >= 9'],
+      targets: ['defaults', 'ie >= 11', 'chrome >= 30', 'safari >= 7'],
       polyfills: true,
       modernPolyfills: true,
       modernTargets: ['chrome >= 61', 'safari >= 10.1']
