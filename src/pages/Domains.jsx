@@ -66,11 +66,12 @@ export default function Domains() {
   const filteredDivisions = useMemo(() => {
     if (!searchQuery.trim()) return allDivisions;
     const q = searchQuery.toLowerCase();
-    return allDivisions.filter(d => 
-      String(d.number).includes(q) ||
-      d.name.toLowerCase().includes(q) ||
-      (d.claim && d.claim.owner_name && d.claim.owner_name.toLowerCase().includes(q))
-    );
+    return allDivisions.filter(d => {
+      const ownerName = d.claim ? (d.claim.is_abaton ? 'abaton' : (d.claim.live_name || d.claim.owner_name || 'claimed')) : '';
+      return String(d.number).includes(q) ||
+        d.name.toLowerCase().includes(q) ||
+        ownerName.toLowerCase().includes(q);
+    });
   }, [allDivisions, searchQuery]);
 
   // --- Map Logic ---
@@ -93,7 +94,7 @@ export default function Domains() {
       weight: claim ? 3 : 1,
       opacity: 1,
       fillColor: '#000000',
-      fillOpacity: claim ? 0.2 : 0.05,
+      fillOpacity: claim ? (claim.is_abaton ? 0.6 : 0.2) : 0.05,
       dashArray: claim ? '' : '4 4',
     };
   }, [claimByDiv]);
@@ -103,13 +104,15 @@ export default function Domains() {
     const name = feature?.properties?.__name;
     const claim = claimByDiv.get(n);
     
+    const ownerName = claim ? (claim.is_abaton ? 'ABATON' : (claim.live_name || claim.owner_name || 'CLAIMED')) : 'UNCLAIMED';
+
     layer.bindPopup(
       `<strong>Division ${n}: ${name}</strong><br/>` +
-      `Owner: ${claim ? claim.owner_name : 'UNCLAIMED'}`
+      `Owner: ${ownerName}`
     );
 
     if (claim) {
-      layer.bindTooltip(claim.owner_name, { permanent: true, direction: 'center', className: 'domain-tooltip-claimed' });
+      layer.bindTooltip(ownerName, { permanent: true, direction: 'center', className: 'domain-tooltip-claimed' });
     } else {
       layer.bindTooltip(String(n), { permanent: true, direction: 'center', className: 'domain-tooltip-unclaimed' });
     }
@@ -187,24 +190,31 @@ export default function Domains() {
             <p>ACCESSING LAND REGISTRY...</p>
           ) : (
             <div style={{ marginTop: '10px' }}>
-              {filteredDivisions.map(div => (
-                <div key={div.number} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontSize: '22px' }}>
-                      #{div.number} - {div.name}
-                    </strong>
-                    {div.claim && (
-                      <span style={{ fontWeight: 'bold', border: '2px solid black', padding: '2px 8px', fontSize: '14px' }}>
-                        CLAIMED
-                      </span>
-                    )}
+              {filteredDivisions.map(div => {
+                const isClaimed = !!div.claim;
+                const ownerName = isClaimed 
+                  ? (div.claim.is_abaton ? 'ABATON' : (div.claim.live_name || div.claim.owner_name || 'CLAIMED')) 
+                  : 'UNCLAIMED';
+
+                return (
+                  <div key={div.number} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <strong style={{ fontSize: '22px' }}>
+                        #{div.number} - {div.name}
+                      </strong>
+                      {isClaimed && (
+                        <span style={{ fontWeight: 'bold', border: '2px solid black', padding: '2px 8px', fontSize: '14px' }}>
+                          {div.claim.is_abaton ? 'ABATON' : 'CLAIMED'}
+                        </span>
+                      )}
+                    </div>
+                    
+                    <div style={{ marginTop: '10px', fontSize: '20px' }}>
+                      &gt; OWNER: <strong>{ownerName}</strong>
+                    </div>
                   </div>
-                  
-                  <div style={{ marginTop: '10px', fontSize: '20px' }}>
-                    &gt; OWNER: {div.claim ? <strong>{div.claim.owner_name}</strong> : 'UNCLAIMED'}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </>
