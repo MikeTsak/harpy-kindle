@@ -48,7 +48,7 @@ function PrivateHarpyRoute({ children }) {
         {children}
       </main>
       <footer style={{ borderTop: '2px solid var(--border-color)', padding: '15px', textAlign: 'center', fontWeight: 'bold' }}>
-        --- [ NODE OPERATOR: GIANNAKIS ] ---
+        [ NODE OPERATOR: GIANNAKIS ]
       </footer>
     </div>
   );
@@ -61,8 +61,9 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<PrivateHarpyRoute><Dashboard /></PrivateHarpyRoute>} />
-          <Route path="/boons" element={<PrivateHarpyRoute><Boons /></PrivateHarpyRoute>} />
+          <Route path="/status" element={<PrivateHarpyRoute><Reputation /></PrivateHarpyRoute>} />
           <Route path="/reputation" element={<PrivateHarpyRoute><Reputation /></PrivateHarpyRoute>} />
+          <Route path="/boons" element={<PrivateHarpyRoute><Boons /></PrivateHarpyRoute>} />
           <Route path="/elysium" element={<PrivateHarpyRoute><ElysiumFeed /></PrivateHarpyRoute>} />
           <Route path="/domains" element={<PrivateHarpyRoute><Domains /></PrivateHarpyRoute>} />
           <Route path="/secrets" element={<PrivateHarpyRoute><Secrets /></PrivateHarpyRoute>} />

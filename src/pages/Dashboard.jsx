@@ -15,9 +15,9 @@ export default function Dashboard() {
           </button>
         </Link>
         
-        <Link to="/reputation" style={{ textDecoration: 'none' }}>
+        <Link to="/status" style={{ textDecoration: 'none' }}>
           <button>
-            <span>REPUTATION & STATUS</span>
+            <span>STATUS & REPUTATION</span>
             <span>&rarr;</span>
           </button>
         </Link>

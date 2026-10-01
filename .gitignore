@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# deploy configuration credentials
+deploy.config.json
+

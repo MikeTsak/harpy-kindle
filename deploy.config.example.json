@@ -1,0 +1,9 @@
+{
+  "host": "portal.attlarp.gr",
+  "port": 21,
+  "user": "harpy",
+  "password": "your_ftp_password_here",
+  "secure": true,
+  "tlsStrict": false,
+  "remoteDir": "/"
+}
