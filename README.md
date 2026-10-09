@@ -1,6 +1,15 @@
-# React + Vite
+<div align="center">
+  <h1>🦅 Harpy (React + Vite)</h1>
+  <p><strong>Current Version: 1.0.0</strong></p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+  <p>
+    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+    <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License" />
+  </p>
+
+  <p><em>This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.</em></p>
+</div>
 
 Currently, two official plugins are available:
 
