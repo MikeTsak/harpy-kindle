@@ -47,8 +47,14 @@ function PrivateHarpyRoute({ children }) {
       <main style={{ flexGrow: 1, paddingBottom: '40px' }}>
         {children}
       </main>
-      <footer style={{ borderTop: '2px solid var(--border-color)', padding: '15px', textAlign: 'center', fontWeight: 'bold' }}>
-        [ NODE OPERATOR: GIANNAKIS ]
+      <footer style={{ borderTop: '2px solid var(--border-color)', padding: '15px', textAlign: 'center', fontWeight: 'bold', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <div>[ NODE OPERATOR: GIANNAKIS ]</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '13px', fontWeight: 'normal' }}>
+          <a href="https://agileadvisors.gr/" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'var(--text-color)' }}>
+            <img src="/img/agileadvisors_bw.png" alt="Agile Advisors" style={{ height: '20px', width: '20px', objectFit: 'contain' }} />
+            <span>THIS SOFTWARE IS OWNED BY AGILE ADVISORS</span>
+          </a>
+        </div>
       </footer>
     </div>
   );
