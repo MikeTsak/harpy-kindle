@@ -1,0 +1,34 @@
+{
+  "title": "Erebus: Harpy Node",
+  "tagline": "An e ink Court terminal for the Harpy at Athens Through Time live role play events.",
+  "description": "A specialized e ink web application designed for Kindle experimental browsers, used in character by the Harpy during Vampire: The Masquerade live events. It tracks boons, status, territory domains, and Court gossip in high contrast black and white with touch friendly targets and an ES5 legacy bundle.",
+  "type": "Web app",
+  "status": "finished",
+  "year": 2026,
+  "role": "Solo developer",
+  "tags": [
+    "React",
+    "Vite",
+    "JavaScript",
+    "Leaflet",
+    "CSS",
+    "HTML"
+  ],
+  "highlights": [
+    "High contrast black and white theme optimized for e ink Kindle displays",
+    "Real time boon registry synchronised with the live Court ledger",
+    "Status and Camarilla reputation directory with title management",
+    "Legacy ES5 and polyfill build targeting older browser engines"
+  ],
+  "links": [
+    {
+      "label": "Visit chronicle",
+      "url": "https://attlarp.gr"
+    },
+    {
+      "label": "Open web portal",
+      "url": "https://portal.attlarp.gr"
+    }
+  ],
+  "cover": "cover.webp"
+}
